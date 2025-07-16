@@ -18,6 +18,10 @@ export class StudentController {
   getStudents(): Promise<Student[]> {
     return this.studentService.getStudents();
   }
+  @Get(':id')
+  getStudent(@Param('id') id: number): Promise<Student> {
+    return this.studentService.getStudentById(id);
+  }
   @Post()
   createStudent(@Body() studentDto: StudentDto) {
     this.studentService.createStudent(studentDto);
