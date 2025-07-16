@@ -1,27 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { StudentDto } from './student.dto';
+import { Student } from './student.entity';
 
 @Injectable()
 export class StudentService {
-  students: StudentDto[] = [
-    { nom: 'John', prenom: 'Doe', email: 'john.doe@example.com', age: 20 },
-    { nom: 'Donal', prenom: 'TRUMP', email: 'jane.doe@example.com', age: 22 },
-  ];
-  createStudent(studentDto: StudentDto): void {
-    this.students.push(studentDto);
+  constructor(
+    @InjectRepository(Student)
+    private studentRepository: Repository<Student>,
+  ) {}
+
+  async createStudent(studentDto: StudentDto): Promise<Student> {
+    const student = this.studentRepository.create(studentDto);
+    return this.studentRepository.save(student);
   }
 
-  getStudents(): StudentDto[] {
-    return this.students;
+  async getStudents(): Promise<Student[]> {
+    return this.studentRepository.find();
   }
-  updateStudent(index: number, studentDto: StudentDto): void {
-    if (index >= 0 && index < this.students.length) {
-      this.students[index] = studentDto;
-    }
+
+  async getStudentById(id: number): Promise<Student> {
+    return this.studentRepository.findOneBy({ id });
   }
-  deleteStudent(index: number): void {
-    if (index >= 0 && index < this.students.length) {
-      this.students.splice(index, 1);
-    }
+
+  async updateStudent(id: number, studentDto: StudentDto): Promise<Student> {
+    await this.studentRepository.update(id, studentDto);
+    return this.studentRepository.findOneBy({ id });
+  }
+
+  async deleteStudent(id: number): Promise<void> {
+    await this.studentRepository.delete(id);
   }
 }

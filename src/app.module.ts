@@ -16,7 +16,7 @@ import { StudentModule } from './student/student.module';
       username: 'dev',
       password: 'dev',
       database: 'geu_db',
-      entities: [],
+      autoLoadEntities: true,
       synchronize: true,
     }),
   ],
