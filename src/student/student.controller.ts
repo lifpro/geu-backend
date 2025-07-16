@@ -8,13 +8,14 @@ import {
   Put,
 } from '@nestjs/common';
 import { StudentDto } from './student.dto';
+import { Student } from './student.entity';
 import { StudentService } from './student.service';
 
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
   @Get()
-  getStudents(): StudentDto[] {
+  getStudents(): Promise<Student[]> {
     return this.studentService.getStudents();
   }
   @Post()
